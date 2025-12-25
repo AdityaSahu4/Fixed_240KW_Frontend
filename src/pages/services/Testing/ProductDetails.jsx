@@ -35,7 +35,7 @@ function ProductDetails({ formData, updateFormData }) {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Sahu Details</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Testing Details</h1>
       </div>
 
       {/* Basic Equipment Information */}
