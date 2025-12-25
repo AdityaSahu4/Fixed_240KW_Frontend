@@ -2,14 +2,14 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Save, CheckCircle } from 'lucide-react'
-import ProductDetails from '../jrf/ProductDetails'
-import TechnicalDocuments from '../jrf/TechnicalDocuments'
-import TestingRequirementsForm from '../jrf/TestingRequirementsForm'
-import TestingStandardsForm from '../jrf/TestingStandardsForm'
-import LabSelection from '../jrf/LabSelection'
-import DesignSubmissionSuccess from './DesignSubmissionSuccess'
+import ProductDetails from './ProductDetails'
+import TechnicalDocuments from './TechnicalDocuments'
+import TestingRequirementsForm from './TestingRequirementsForm'
+import TestingStandardsForm from './TestingStandardsForm'
+import LabSelection from './LabSelection'
+import SubmissionSuccess from './SubmissionSuccess'
 
-function DesignFlow() {
+function JRFFlow() {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState({
@@ -55,8 +55,8 @@ function DesignFlow() {
   const steps = [
     { id: 'product', title: 'Product Details', component: ProductDetails },
     { id: 'documents', title: 'Technical Specification Documents', component: TechnicalDocuments },
-    { id: 'requirements', title: 'Design Testing Requirements', component: TestingRequirementsForm },
-    { id: 'standards', title: 'Design Testing Standards', component: TestingStandardsForm },
+    { id: 'requirements', title: 'Testing Requirements', component: TestingRequirementsForm },
+    { id: 'standards', title: 'Testing Standards', component: TestingStandardsForm },
     { id: 'lab', title: 'Lab selection and Review', component: LabSelection },
   ]
 
@@ -80,13 +80,13 @@ function DesignFlow() {
   }
 
   const handleSaveDraft = () => {
-    localStorage.setItem('design_draft', JSON.stringify(formData))
+    localStorage.setItem('jrf_draft', JSON.stringify(formData))
     alert('Draft saved successfully!')
   }
 
   const handleSubmit = () => {
     // Save to context or send to API
-    console.log('Design V&V Form submitted:', formData)
+    console.log('Form submitted:', formData)
     setCurrentStep(steps.length) // Move to success page
   }
 
@@ -98,13 +98,13 @@ function DesignFlow() {
   const sidebarSteps = [
     { title: 'Product Details', completed: currentStep > 0 },
     { title: 'Technical Specification Documents', completed: currentStep > 1 },
-    { title: 'Design Testing Requirements', completed: currentStep > 2 },
-    { title: 'Design Testing Standards', completed: currentStep > 3 },
+    { title: 'Testing Requirements', completed: currentStep > 2 },
+    { title: 'Testing Standards', completed: currentStep > 3 },
     { title: 'Lab selection and Review', completed: currentStep > 4 },
   ]
 
   if (currentStep >= steps.length) {
-    return <DesignSubmissionSuccess />
+    return <SubmissionSuccess />
   }
 
   return (
@@ -188,7 +188,7 @@ function DesignFlow() {
                 onClick={handleNext}
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
               >
-                {currentStep === steps.length - 1 ? 'Get Quotation' : 'Next'}
+                {currentStep === steps.length - 1 ? 'Submit' : 'Next'}
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -206,5 +206,5 @@ function DesignFlow() {
   )
 }
 
-export default DesignFlow
+export default JRFFlow
 

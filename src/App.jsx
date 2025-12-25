@@ -53,17 +53,17 @@ const PageLoader = () => (
 )
 
 import Design from './pages/services/Design'
-import DesignFlow from './pages/services/DesignFlow'
+import DesignFlow from './pages/services/Design V&V/DesignFlow'
 import Testing from './pages/services/Testing'
 import Calibration from './pages/services/Calibration'
-import CalibrationFlow from './pages/services/CalibrationFlow'
+import CalibrationFlow from './pages/services//Calibration/CalibrationFlow'
 import Simulation from './pages/services/Simulation'
-import SimulationFlow from './pages/services/SimulationFlow'
+import SimulationFlow from './pages/services/Simulation/SimulationFlow'
 import Debugging from './pages/services/Debugging'
-import DebuggingFlow from './pages/services/DebuggingFlow'
+import DebuggingFlow from './pages/services/Debugging/DebuggingFlow'
 import Certification from './pages/services/Certification'
-import CertificationFlow from './pages/services/CertificationFlow'
-import JRFFlow from './pages/jrf/JRFFlow'
+import CertificationFlow from './pages/services/Certification/CertificationFlow'
+import TestingFlow from './pages/services/Testing/TestingFlow'
 
 // ScrollToTop component to scroll to top on route change
 function ScrollToTop() {
@@ -296,7 +296,7 @@ function AnimatedRoutes() {
               variants={pageVariants}
               transition={pageTransition}
             >
-              <JRFFlow />
+              <TestingFlow />
             </motion.div>
           }
         />

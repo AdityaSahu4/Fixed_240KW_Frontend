@@ -2,51 +2,28 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Save, CheckCircle } from 'lucide-react'
-import ProductDetails from '../jrf/ProductDetails'
-import TechnicalDocuments from '../jrf/TechnicalDocuments'
-import SimulationDetails from './SimulationDetails'
-import SimulationSubmissionSuccess from './SimulationSubmissionSuccess'
+import CertificationDocuments from './CertificationDocuments'
+import CertificationSubmissionSuccess from './CertificationSubmissionSuccess'
+import SubmissionReview from './SubmissionReview'
 
-function SimulationFlow() {
+function CertificationFlow() {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState({
-    // Product Details
-    eutName: '',
-    eutQuantity: '',
-    manufacturer: '',
-    modelNo: '',
-    serialNo: '',
-    supplyVoltage: '',
-    operatingFrequency: '',
-    current: '',
-    weight: '',
-    dimensions: { length: '', width: '', height: '' },
-    powerPorts: '',
-    signalLines: '',
-    softwareName: '',
-    softwareVersion: '',
-    
-    // Industry/Application
-    industry: [],
-    industryOther: '',
-    
-    // Testing dates
-    preferredDate: '',
+    targetRegion: '',
+    productName: '',
+    productCategory: '',
+    standards: ['IEC 61000-4-5', 'CISPR 32', 'IEC 61851'],
+    uploadedCertDocs: {},
     additionalNotes: '',
-    
-    // Simulation Details
-    productType: 'new',
-    selectedSimulations: [],
-    
-    // Documents
-    uploadedDocs: {}
+    confirmAccurate: false,
+    confirmCorrect: false,
+    confirmUnderstand: false,
   })
 
   const steps = [
-    { id: 'product', title: 'Product Details', component: ProductDetails },
-    { id: 'documents', title: 'Technical Specification Documents', component: TechnicalDocuments },
-    { id: 'simulation', title: 'Simulation Details', component: SimulationDetails },
+    { id: 'documents', title: 'Certification Documents', component: CertificationDocuments },
+    { id: 'review', title: 'Submission Review', component: SubmissionReview },
   ]
 
   const CurrentStepComponent = steps[currentStep]?.component
@@ -69,14 +46,24 @@ function SimulationFlow() {
   }
 
   const handleSaveDraft = () => {
-    localStorage.setItem('simulation_draft', JSON.stringify(formData))
+    localStorage.setItem('certification_draft', JSON.stringify(formData))
     alert('Draft saved successfully!')
   }
 
   const handleSubmit = () => {
+    // Validate confirmations
+    if (!formData.confirmAccurate || !formData.confirmCorrect || !formData.confirmUnderstand) {
+      alert('Please confirm all statements before submitting.')
+      return
+    }
+    
     // Save to context or send to API
-    console.log('Simulation Form submitted:', formData)
+    console.log('Certification Form submitted:', formData)
     setCurrentStep(steps.length) // Move to success page
+  }
+
+  const handleEdit = () => {
+    setCurrentStep(0) // Go back to first step
   }
 
   const updateFormData = (updates) => {
@@ -85,14 +72,12 @@ function SimulationFlow() {
 
   // Sidebar navigation
   const sidebarSteps = [
-    { title: 'Product Details', completed: currentStep > 0 },
-    { title: 'Technical Specification Documents', completed: currentStep > 1 },
-    { title: 'Simulation Details', completed: currentStep > 2 },
-    { title: 'Submit for Simulation', completed: currentStep > 3 },
+    { title: 'Certification Documents', completed: currentStep > 0 },
+    { title: 'Submission Review', completed: currentStep > 1 },
   ]
 
   if (currentStep >= steps.length) {
-    return <SimulationSubmissionSuccess />
+    return <CertificationSubmissionSuccess formData={formData} />
   }
 
   return (
@@ -148,6 +133,7 @@ function SimulationFlow() {
                   <CurrentStepComponent
                     formData={formData}
                     updateFormData={updateFormData}
+                    onEdit={currentStep === 1 ? handleEdit : undefined}
                   />
                 )}
               </motion.div>
@@ -160,8 +146,17 @@ function SimulationFlow() {
                 disabled={currentStep === 0}
                 className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
-                <ArrowLeft className="w-4 h-4" />
-                Previous
+                {currentStep === 1 ? (
+                  <>
+                    <ArrowLeft className="w-4 h-4" />
+                    Go Back & Edit
+                  </>
+                ) : (
+                  <>
+                    <ArrowLeft className="w-4 h-4" />
+                    Previous
+                  </>
+                )}
               </button>
 
               <button
@@ -169,14 +164,14 @@ function SimulationFlow() {
                 className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
               >
                 <Save className="w-4 h-4" />
-                Save as Draft
+                Save & Continue Later
               </button>
 
               <button
                 onClick={handleNext}
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors flex items-center gap-2"
               >
-                {currentStep === steps.length - 1 ? 'Submit for Simulation' : 'Next'}
+                {currentStep === steps.length - 1 ? 'Submit for Review' : 'Next'}
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -194,5 +189,5 @@ function SimulationFlow() {
   )
 }
 
-export default SimulationFlow
+export default CertificationFlow
 

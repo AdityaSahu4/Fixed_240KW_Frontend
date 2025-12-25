@@ -2,14 +2,12 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Save, CheckCircle } from 'lucide-react'
-import ProductDetails from '../jrf/ProductDetails'
-import DebuggingTechnicalDocuments from './DebuggingTechnicalDocuments'
-import ProductDebuggingDetails from './ProductDebuggingDetails'
-import RequestUnderReview from './RequestUnderReview'
-import IssueIdentificationReview from './IssueIdentificationReview'
-import DebuggingSubmissionSuccess from './DebuggingSubmissionSuccess'
+import ProductDetails from './ProductDetails'
+import TechnicalDocuments from './TechnicalDocuments'
+import SimulationDetails from './SimulationDetails'
+import SimulationSubmissionSuccess from './SimulationSubmissionSuccess'
 
-function DebuggingFlow() {
+function SimulationFlow() {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState({
@@ -37,18 +35,9 @@ function DebuggingFlow() {
     preferredDate: '',
     additionalNotes: '',
     
-    // Debugging Details
-    selectedDebugTests: [],
-    customTest: '',
-    uploadedTestReports: [],
-    issueDescription: '',
-    
-    // Issue Review
-    engineerComments: '',
-    issueCategory: 'EMI / EMC Category',
-    severityRating: 'Low Severity',
-    confidenceScore: 75,
-    debugPath: 'full',
+    // Simulation Details
+    productType: 'new',
+    selectedSimulations: [],
     
     // Documents
     uploadedDocs: {}
@@ -56,10 +45,8 @@ function DebuggingFlow() {
 
   const steps = [
     { id: 'product', title: 'Product Details', component: ProductDetails },
-    { id: 'documents', title: 'Technical Specification Documents', component: DebuggingTechnicalDocuments },
-    { id: 'debugging', title: 'Product Debugging Details', component: ProductDebuggingDetails },
-    { id: 'review', title: 'Request under Review', component: RequestUnderReview },
-    { id: 'issue', title: 'Issue Identification & Review', component: IssueIdentificationReview },
+    { id: 'documents', title: 'Technical Specification Documents', component: TechnicalDocuments },
+    { id: 'simulation', title: 'Simulation Details', component: SimulationDetails },
   ]
 
   const CurrentStepComponent = steps[currentStep]?.component
@@ -82,13 +69,13 @@ function DebuggingFlow() {
   }
 
   const handleSaveDraft = () => {
-    localStorage.setItem('debugging_draft', JSON.stringify(formData))
+    localStorage.setItem('simulation_draft', JSON.stringify(formData))
     alert('Draft saved successfully!')
   }
 
   const handleSubmit = () => {
     // Save to context or send to API
-    console.log('Debugging Form submitted:', formData)
+    console.log('Simulation Form submitted:', formData)
     setCurrentStep(steps.length) // Move to success page
   }
 
@@ -100,14 +87,12 @@ function DebuggingFlow() {
   const sidebarSteps = [
     { title: 'Product Details', completed: currentStep > 0 },
     { title: 'Technical Specification Documents', completed: currentStep > 1 },
-    { title: 'Product Debugging Details', completed: currentStep > 2 },
-    { title: 'Request under Review', completed: currentStep > 3 },
-    { title: 'Issue Identification & Review', completed: currentStep > 4 },
-    { title: 'Submit Request', completed: currentStep > 5 },
+    { title: 'Simulation Details', completed: currentStep > 2 },
+    { title: 'Submit for Simulation', completed: currentStep > 3 },
   ]
 
   if (currentStep >= steps.length) {
-    return <DebuggingSubmissionSuccess />
+    return <SimulationSubmissionSuccess />
   }
 
   return (
@@ -163,41 +148,38 @@ function DebuggingFlow() {
                   <CurrentStepComponent
                     formData={formData}
                     updateFormData={updateFormData}
-                    onNext={currentStep === 3 ? handleNext : undefined}
                   />
                 )}
               </motion.div>
             </AnimatePresence>
 
             {/* Navigation Buttons */}
-            {currentStep !== 3 && ( // Hide navigation on Request under Review step
-              <div className="mt-8 flex items-center justify-between">
-                <button
-                  onClick={handlePrevious}
-                  disabled={currentStep === 0}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
-                  <ArrowLeft className="w-4 h-4" />
-                  Previous
-                </button>
+            <div className="mt-8 flex items-center justify-between">
+              <button
+                onClick={handlePrevious}
+                disabled={currentStep === 0}
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Previous
+              </button>
 
-                <button
-                  onClick={handleSaveDraft}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
-                >
-                  <Save className="w-4 h-4" />
-                  Save as Draft
-                </button>
+              <button
+                onClick={handleSaveDraft}
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+              >
+                <Save className="w-4 h-4" />
+                Save as Draft
+              </button>
 
-                <button
-                  onClick={handleNext}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-                >
-                  {currentStep === steps.length - 1 ? 'Submit Request' : currentStep === 2 ? 'Continue to Diagnostics →' : 'Next'}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            )}
+              <button
+                onClick={handleNext}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
+              >
+                {currentStep === steps.length - 1 ? 'Submit for Simulation' : 'Next'}
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
 
             {/* Footer */}
             <div className="mt-8 flex items-center justify-end gap-6 text-sm text-gray-600">
@@ -212,5 +194,5 @@ function DebuggingFlow() {
   )
 }
 
-export default DebuggingFlow
+export default SimulationFlow
 
