@@ -9,7 +9,6 @@ import TechnicalDocuments from './TechnicalDocuments'
 import TestingRequirementsForm from './TestingRequirementsForm'
 import TestingStandardsForm from './TestingStandardsForm'
 import LabSelection from './LabSelection'
-import SubmissionSuccess from './SubmissionSuccess'
 
 function TestingFlow() {
   const navigate = useNavigate()
