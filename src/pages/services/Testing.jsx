@@ -157,7 +157,7 @@ function Testing() {
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
           <p className="text-xl mb-6 text-green-100">Starting from $149 per project</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/services/testing/start">
+            <Link to="/services/testing/product-details">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

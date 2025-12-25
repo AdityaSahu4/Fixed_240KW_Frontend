@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, Save, CheckCircle } from 'lucide-react'
 import ProductDetails from './ProductDetails'
@@ -9,7 +11,7 @@ import TestingStandardsForm from './TestingStandardsForm'
 import LabSelection from './LabSelection'
 import SubmissionSuccess from './SubmissionSuccess'
 
-function JRFFlow() {
+function TestingFlow() {
   const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(0)
   const [formData, setFormData] = useState({
@@ -59,35 +61,54 @@ function JRFFlow() {
     { id: 'standards', title: 'Testing Standards', component: TestingStandardsForm },
     { id: 'lab', title: 'Lab selection and Review', component: LabSelection },
   ]
+  const stepPaths = [
+    'product-details',
+    'technical-documents',
+    'testing-requirements',
+    'testing-standards',
+    'lab-selection',
+  ]
+  const { step } = useParams()
+  useEffect(() => {
+    if (!step) return
+    const index = stepPaths.indexOf(step)
+    if (index !== -1) {
+      setCurrentStep(index)
+    }}, [step])
+
 
   const CurrentStepComponent = steps[currentStep]?.component
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1)
+      const nextStep = currentStep + 1
+      setCurrentStep(nextStep)
+      navigate(`/services/testing/${stepPaths[nextStep]}`)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     } else {
-      // Submit form
       handleSubmit()
     }
   }
 
   const handlePrevious = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1)
+      const prevStep = currentStep - 1
+      setCurrentStep(prevStep)
+      navigate(`/services/testing/${stepPaths[prevStep]}`)
       window.scrollTo({ top: 0, behavior: 'smooth' })
     }
   }
 
   const handleSaveDraft = () => {
-    localStorage.setItem('jrf_draft', JSON.stringify(formData))
+    localStorage.setItem('testing_draft', JSON.stringify(formData))
     alert('Draft saved successfully!')
   }
-
+  
   const handleSubmit = () => {
-    // Save to context or send to API
     console.log('Form submitted:', formData)
-    setCurrentStep(steps.length) // Move to success page
+
+  // Later: send to FastAPI here
+    navigate('/services/testing/submission-success')
   }
 
   const updateFormData = (updates) => {
@@ -102,10 +123,6 @@ function JRFFlow() {
     { title: 'Testing Standards', completed: currentStep > 3 },
     { title: 'Lab selection and Review', completed: currentStep > 4 },
   ]
-
-  if (currentStep >= steps.length) {
-    return <SubmissionSuccess />
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -206,5 +223,5 @@ function JRFFlow() {
   )
 }
 
-export default JRFFlow
+export default TestingFlow
 

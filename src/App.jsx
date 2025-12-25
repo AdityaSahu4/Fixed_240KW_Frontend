@@ -27,11 +27,6 @@ import OrderDetail from './pages/customer/OrderDetail'
 import Messages from './pages/customer/Messages'
 import Settings from './pages/customer/Settings'
 import ServiceSelection from './pages/ServiceSelection'
-import CustomerDetails from './pages/jrf/CustomerDetails'
-import EUTDetails from './pages/jrf/EUTDetails'
-import TestingRequirements from './pages/jrf/TestingRequirements'
-import TestingStandards from './pages/jrf/TestingStandards'
-import LabsReview from './pages/jrf/LabsReview'
 import LabLayout from './layouts/LabLayout'
 import LabLogin from './pages/lab/Login'
 import LabSignupPersonal from './pages/lab/SignupPersonal'
@@ -41,6 +36,7 @@ import LabQueue from './pages/lab/Queue'
 import LabSchedule from './pages/lab/Schedule'
 import RequestDetail from './pages/lab/RequestDetail'
 import PortalSelection from './pages/lab/PortalSelection'
+import SubmissionSuccess from './pages/services/Testing/SubmissionSuccess'
 
 // Loading component
 const PageLoader = () => (
@@ -287,7 +283,7 @@ function AnimatedRoutes() {
           }
         />
         <Route
-          path="/services/testing/start"
+          path="/services/testing/:step?"
           element={
             <motion.div
               initial="initial"
@@ -299,6 +295,20 @@ function AnimatedRoutes() {
               <TestingFlow />
             </motion.div>
           }
+        />
+        <Route
+        path="/services/testing/submission-success"
+        element={
+        <motion.div
+        initial="initial"
+        animate="animate"
+        exit="exit"  
+        variants={pageVariants}
+        transition={pageTransition}
+        >
+          <SubmissionSuccess />
+          </motion.div>
+        }
         />
         <Route
           path="/services/calibration"
@@ -424,12 +434,6 @@ function AnimatedRoutes() {
           <Route path="messages" element={<Messages />} />
           <Route path="settings" element={<Settings />} />
         </Route>
-        {/* JRF Multi-step */}
-        <Route path="/jrf/customer-details" element={<CustomerDetails />} />
-        <Route path="/jrf/eut-details" element={<EUTDetails />} />
-        <Route path="/jrf/testing-requirements" element={<TestingRequirements />} />
-        <Route path="/jrf/testing-standards" element={<TestingStandards />} />
-        <Route path="/jrf/labs-review" element={<LabsReview />} />
         {/* Lab Area (portal + simple lab dashboard) */}
         <Route path="/lab/portal" element={<PortalSelection />} />
         <Route path="/lab/login" element={<LabLogin />} />
