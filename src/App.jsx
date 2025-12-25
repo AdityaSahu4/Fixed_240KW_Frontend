@@ -36,7 +36,7 @@ import LabQueue from './pages/lab/Queue'
 import LabSchedule from './pages/lab/Schedule'
 import RequestDetail from './pages/lab/RequestDetail'
 import PortalSelection from './pages/lab/PortalSelection'
-import SubmissionSuccess from './pages/services/Testing/SubmissionSuccess'
+import TestingSubmissionSuccess from './pages/services/Testing/SubmissionSuccess'
 
 // Loading component
 const PageLoader = () => (
@@ -306,7 +306,7 @@ function AnimatedRoutes() {
         variants={pageVariants}
         transition={pageTransition}
         >
-          <SubmissionSuccess />
+          <TestingSubmissionSuccess />
           </motion.div>
         }
         />
